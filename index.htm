@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0d0f;
+  --bg2:#131318;
+  --bg3:#1a1a24;
+  --border:#2a2a38;
+  --border2:#3a3a50;
+  --accent:#f7c948;
+  --accent2:#ff6b35;
+  --accent3:#4ade80;
+  --accent4:#60a5fa;
+  --accent5:#a78bfa;
+  --text:#e8e8f0;
+  --text2:#9090a8;
+  --text3:#5a5a70;
+  --code-bg:#0a0a10;
+  --tag-yellow:rgba(247,201,72,0.12);
+  --tag-orange:rgba(255,107,53,0.12);
+  --tag-green:rgba(74,222,128,0.12);
+  --tag-blue:rgba(96,165,250,0.12);
+  --tag-purple:rgba(167,139,250,0.12);
+}
+body{
+  font-family:'Syne',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:0;
+}
+.hero{
+  background:linear-gradient(135deg,#0d0d0f 0%,#13131e 40%,#1a1020 100%);
+  border-bottom:1px solid var(--border);
+  padding:3rem 2.5rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:320px;height:320px;
+  background:radial-gradient(circle,rgba(247,201,72,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'JS';
+  position:absolute;
+  right:2rem;top:50%;
+  transform:translateY(-50%);
+  font-family:'Syne',sans-serif;
+  font-size:9rem;
+  font-weight:800;
+  color:rgba(247,201,72,0.04);
+  line-height:1;
+  pointer-events:none;
+  letter-spacing:-4px;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--tag-yellow);
+  color:var(--accent);
+  border:1px solid rgba(247,201,72,0.2);
+  border-radius:20px;
+  font-size:11px;font-weight:600;letter-spacing:.06em;
+  padding:4px 12px;
+  text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.hero h1{
+  font-size:2.6rem;font-weight:800;
+  line-height:1.05;
+  letter-spacing:-1px;
+  margin-bottom:.5rem;
+}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--text2);font-size:.95rem;font-weight:400;max-width:460px;line-height:1.6}
+.meta-row{
+  display:flex;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;
+}
+.meta-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:.8rem;color:var(--text2);
+}
+.meta-item i{font-size:14px;color:var(--accent)}
+
+.toc{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:1rem 2.5rem;
+  display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;
+}
+.toc-label{font-size:.75rem;color:var(--text3);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-right:.5rem}
+.toc-btn{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);
+  font-family:'Syne',sans-serif;
+  font-size:.78rem;font-weight:500;
+  padding:5px 12px;border-radius:20px;
+  cursor:pointer;transition:all .18s;
+}
+.toc-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--tag-yellow)}
+
+.content{padding:2rem 2.5rem 4rem;max-width:860px}
+
+.section{margin-bottom:3rem}
+.section-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:1.5rem;
+  padding-bottom:.75rem;
+  border-bottom:1px solid var(--border);
+}
+.section-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.7rem;color:var(--accent);
+  background:var(--tag-yellow);
+  border:1px solid rgba(247,201,72,0.2);
+  padding:3px 8px;border-radius:4px;
+  font-weight:600;letter-spacing:.04em;
+}
+.section-title{font-size:1.25rem;font-weight:700;letter-spacing:-.3px}
+.section-sub{color:var(--text2);font-size:.82rem;margin-left:auto}
+
+.card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.25rem 1.5rem;
+  margin-bottom:1rem;
+  transition:border-color .18s;
+}
+.card:hover{border-color:var(--border2)}
+.card-title{
+  font-size:.82rem;font-weight:600;
+  color:var(--text2);letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:.75rem;display:flex;align-items:center;gap:8px;
+}
+.card-title .dot-color{width:7px;height:7px;border-radius:50%}
+
+pre,code{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.8rem;
+}
+pre{
+  background:var(--code-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:1rem 1.25rem;
+  overflow-x:auto;
+  line-height:1.7;
+  margin:.75rem 0;
+}
+code{background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;font-size:.8rem;color:var(--accent4)}
+.kw{color:#c792ea}
+.fn{color:#82aaff}
+.str{color:#c3e88d}
+.num{color:#f78c6c}
+.cm{color:#546e7a;font-style:italic}
+.op{color:#89ddff}
+.cls{color:var(--accent)}
+.prop{color:#80cbc4}
+
+.tag{
+  display:inline-flex;align-items:center;
+  font-size:.72rem;font-weight:600;
+  padding:3px 10px;border-radius:12px;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.tag-y{background:var(--tag-yellow);color:var(--accent);border:1px solid rgba(247,201,72,.15)}
+.tag-g{background:var(--tag-green);color:var(--accent3);border:1px solid rgba(74,222,128,.15)}
+.tag-b{background:var(--tag-blue);color:var(--accent4);border:1px solid rgba(96,165,250,.15)}
+.tag-p{background:var(--tag-purple);color:var(--accent5);border:1px solid rgba(167,139,250,.15)}
+.tag-o{background:var(--tag-orange);color:var(--accent2);border:1px solid rgba(255,107,53,.15)}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+
+.tip{
+  display:flex;gap:.75rem;
+  background:rgba(247,201,72,0.05);
+  border:1px solid rgba(247,201,72,0.15);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:.875rem 1rem;
+  margin:.75rem 0;
+  font-size:.85rem;line-height:1.6;
+  color:var(--text2);
+}
+.tip-icon{color:var(--accent);font-size:1rem;flex-shrink:0;margin-top:1px}
+
+.warn{
+  background:rgba(255,107,53,0.05);
+  border:1px solid rgba(255,107,53,0.15);
+  border-left:3px solid var(--accent2);
+  border-radius:0 8px 8px 0;
+  padding:.875rem 1rem;
+  font-size:.85rem;line-height:1.6;
+  color:var(--text2);
+  margin:.75rem 0;
+  display:flex;gap:.75rem;
+}
+
+.table-wrap{overflow-x:auto;margin:.75rem 0}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{
+  background:var(--bg3);
+  color:var(--text2);
+  font-weight:600;text-align:left;
+  padding:.6rem 1rem;
+  border-bottom:1px solid var(--border);
+  font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
+}
+td{
+  padding:.6rem 1rem;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  vertical-align:top;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+
+.divider{height:1px;background:var(--border);margin:2rem 0}
+.img-block{
+  border-radius:10px;overflow:hidden;
+  border:1px solid var(--border);
+  margin:.75rem 0;
+}
+.img-placeholder{
+  background:var(--bg3);
+  height:160px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;color:var(--text3);font-size:.82rem;
+}
+
+.pill-row{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.pill{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.75rem;font-weight:500;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  padding:4px 10px;border-radius:20px;
+  color:var(--text2);
+}
+
+.flow-diagram{
+  display:flex;align-items:center;gap:0;
+  background:var(--code-bg);
+  border:1px solid var(--border);
+  border-radius:8px;padding:1rem 1.25rem;
+  overflow-x:auto;margin:.75rem 0;flex-wrap:wrap;gap:8px;
+}
+.flow-box{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:6px;
+  padding:6px 14px;
+  font-size:.78rem;font-weight:600;
+  white-space:nowrap;
+}
+.flow-arrow{color:var(--text3);font-size:1rem;padding:0 4px}
+
+.progress-bar{
+  height:4px;background:var(--bg3);border-radius:2px;margin:.5rem 0;
+}
+.progress-fill{height:100%;border-radius:2px;transition:width .3s}
+
+.footer-note{
+  font-size:.75rem;color:var(--text3);
+  border-top:1px solid var(--border);
+  padding-top:1.5rem;margin-top:1rem;
+  display:flex;gap:1rem;align-items:center;
+}
+
+@media(max-width:640px){
+  .two-col,.three-col{grid-template-columns:1fr}
+  .hero{padding:2rem 1.5rem 1.5rem}
+  .content{padding:1.5rem 1.5rem 3rem}
+  .toc{padding:.75rem 1.5rem}
+  .hero h1{font-size:1.8rem}
+  .hero::after{font-size:5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge"><span class="dot"></span>Revision Notes · v2025</div>
+  <h1>JavaScript<br><span>Deep Dive</span></h1>
+  <p>Curated for backend engineers. Focus on runtime mechanics, async patterns, performance, and the parts that actually matter in production.</p>
+  <div class="meta-row">
+    <div class="meta-item">📖 4yr+ Backend Dev</div>
+    <div class="meta-item">⚡ Node.js Focus</div>
+    <div class="meta-item">🔧 ES2015–2024</div>
+    <div class="meta-item">✅ Production Ready</div>
+  </div>
+</div>
+
+<div class="toc">
+  <span class="toc-label">Jump to</span>
+  <button class="toc-btn" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">Event Loop</button>
+  <button class="toc-btn" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})">Closures & Scope</button>
+  <button class="toc-btn" onclick="document.getElementById('s3').scrollIntoView({behavior:'smooth'})">Async Patterns</button>
+  <button class="toc-btn" onclick="document.getElementById('s4').scrollIntoView({behavior:'smooth'})">Prototypes & Classes</button>
+  <button class="toc-btn" onclick="document.getElementById('s5').scrollIntoView({behavior:'smooth'})">Memory & Perf</button>
+  <button class="toc-btn" onclick="document.getElementById('s6').scrollIntoView({behavior:'smooth'})">Modern ES Features</button>
+  <button class="toc-btn" onclick="document.getElementById('s7').scrollIntoView({behavior:'smooth'})">Gotchas</button>
+</div>
+
+<div class="content">
+
+<!-- SECTION 1: EVENT LOOP -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <span class="section-title">Event Loop & Concurrency Model</span>
+    <span class="section-sub"><span class="tag tag-y">Core</span></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent)"></span>Execution Order</div>
+    <div class="flow-diagram">
+      <div class="flow-box" style="border-color:rgba(247,201,72,.4);color:var(--accent)">Call Stack</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box" style="border-color:rgba(167,139,250,.4);color:var(--accent5)">Microtask Queue<br><small style="color:var(--text3);font-weight:400">Promise.then, queueMicrotask</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box" style="border-color:rgba(255,107,53,.4);color:var(--accent2)">Macrotask Queue<br><small style="color:var(--text3);font-weight:400">setTimeout, setInterval, I/O</small></div>
+    </div>
+    <pre><span class="cm">// Classic interview trap — know this cold</span>
+console.log(<span class="str">'1'</span>);
+setTimeout(() <span class="op">=></span> console.log(<span class="str">'2'</span>), <span class="num">0</span>);
+<span class="cls">Promise</span>.resolve().then(() <span class="op">=></span> console.log(<span class="str">'3'</span>));
+queueMicrotask(() <span class="op">=></span> console.log(<span class="str">'4'</span>));
+console.log(<span class="str">'5'</span>);
+<span class="cm">// Output: 1, 5, 3, 4, 2</span>
+<span class="cm">// Microtasks drain FULLY before next macrotask</span></pre>
+    <div class="tip"><span class="tip-icon">💡</span><span>In Node.js, <code>process.nextTick</code> runs <em>before</em> Promise microtasks. It's technically a separate queue with higher priority. This catches people out when mixing <code>nextTick</code> with <code>Promise.then</code>.</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent3)"></span>Node.js Event Loop Phases</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Phase</th><th>Handles</th><th>Notes</th></tr>
+        <tr><td><code>timers</code></td><td>setTimeout, setInterval callbacks</td><td>Minimum delay, not exact</td></tr>
+        <tr><td><code>pending callbacks</code></td><td>I/O errors deferred from previous loop</td><td>Rare, mostly TCP errors</td></tr>
+        <tr><td><code>idle, prepare</code></td><td>Internal use</td><td>Skip in interviews</td></tr>
+        <tr><td><code>poll</code></td><td>Retrieve I/O events, execute callbacks</td><td>Blocks here if queue empty</td></tr>
+        <tr><td><code>check</code></td><td>setImmediate callbacks</td><td>Always after poll phase</td></tr>
+        <tr><td><code>close callbacks</code></td><td>socket.on('close', ...)</td><td>Cleanup</td></tr>
+      </table>
+    </div>
+    <div class="tip"><span class="tip-icon">⚡</span><span><code>setImmediate</code> vs <code>setTimeout(fn, 0)</code>: within an I/O callback, <code>setImmediate</code> always fires first. Outside I/O, order is non-deterministic.</span></div>
+  </div>
+</div>
+
+<!-- SECTION 2: CLOSURES -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <span class="section-title">Closures, Scope & Hoisting</span>
+    <span class="section-sub"><span class="tag tag-p">Mechanics</span></span>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent5)"></span>Scope Chain</div>
+      <pre><span class="kw">function</span> <span class="fn">outer</span>() {
+  <span class="kw">const</span> x <span class="op">=</span> <span class="num">10</span>;
+  <span class="kw">function</span> <span class="fn">inner</span>() {
+    <span class="cm">// x captured via closure</span>
+    <span class="cm">// Lives in outer's [[Env]]</span>
+    <span class="kw">return</span> x <span class="op">*</span> <span class="num">2</span>;
+  }
+  <span class="kw">return</span> inner;
+}
+<span class="kw">const</span> fn <span class="op">=</span> <span class="fn">outer</span>();
+fn(); <span class="cm">// 20 — outer is GC'd except x</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent4)"></span>Hoisting Rules</div>
+      <pre><span class="cm">// var → hoisted + initialized undefined</span>
+console.log(a); <span class="cm">// undefined</span>
+<span class="kw">var</span> a <span class="op">=</span> <span class="num">1</span>;
+
+<span class="cm">// let/const → hoisted, NOT initialized</span>
+console.log(b); <span class="cm">// ReferenceError</span>
+<span class="kw">let</span> b <span class="op">=</span> <span class="num">2</span>; <span class="cm">// TDZ above this line</span>
+
+<span class="cm">// function declarations → fully hoisted</span>
+<span class="fn">greet</span>(); <span class="cm">// Works!</span>
+<span class="kw">function</span> <span class="fn">greet</span>() {};</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent2)"></span>Classic Closure Pitfall — Loop with var</div>
+    <pre><span class="cm">// ❌ Wrong — all callbacks share same 'i'</span>
+<span class="kw">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="num">0</span>; i <span class="op"><</span> <span class="num">3</span>; i<span class="op">++</span>) {
+  setTimeout(() <span class="op">=></span> console.log(i), <span class="num">0</span>); <span class="cm">// 3, 3, 3</span>
+}
+
+<span class="cm">// ✅ Fix 1: let (block-scoped per iteration)</span>
+<span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>; i <span class="op"><</span> <span class="num">3</span>; i<span class="op">++</span>) {
+  setTimeout(() <span class="op">=></span> console.log(i), <span class="num">0</span>); <span class="cm">// 0, 1, 2</span>
+}
+
+<span class="cm">// ✅ Fix 2: IIFE (creates new scope each iteration)</span>
+<span class="kw">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="num">0</span>; i <span class="op"><</span> <span class="num">3</span>; i<span class="op">++</span>) {
+  ((<span class="prop">j</span>) <span class="op">=></span> setTimeout(() <span class="op">=></span> console.log(j), <span class="num">0</span>))(i);
+}</pre>
+  </div>
+</div>
+
+<!-- SECTION 3: ASYNC -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <span class="section-title">Async Patterns</span>
+    <span class="section-sub"><span class="tag tag-g">Backend Critical</span></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent3)"></span>Promise Combinators — Know the differences</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Method</th><th>Resolves when</th><th>Rejects when</th><th>Use case</th></tr>
+        <tr><td><code>Promise.all</code></td><td>All resolve</td><td>Any rejects (fast-fail)</td><td>Parallel, all required</td></tr>
+        <tr><td><code>Promise.allSettled</code></td><td>All settle</td><td>Never rejects</td><td>Parallel, partial results ok</td></tr>
+        <tr><td><code>Promise.race</code></td><td>First settles</td><td>First rejects</td><td>Timeouts</td></tr>
+        <tr><td><code>Promise.any</code></td><td>First resolves</td><td>All reject</td><td>First available resource</td></tr>
+      </table>
+    </div>
+    <pre><span class="cm">// Controlled concurrency — critical for DB/API rate limits</span>
+<span class="kw">async function</span> <span class="fn">batchProcess</span>(items, batchSize <span class="op">=</span> <span class="num">5</span>) {
+  <span class="kw">const</span> results <span class="op">=</span> [];
+  <span class="kw">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="num">0</span>; i <span class="op"><</span> items.length; i <span class="op">+=</span> batchSize) {
+    <span class="kw">const</span> batch <span class="op">=</span> items.slice(i, i <span class="op">+</span> batchSize);
+    results.push(...<span class="kw">await</span> <span class="cls">Promise</span>.<span class="fn">all</span>(batch.<span class="fn">map</span>(processItem)));
+  }
+  <span class="kw">return</span> results;
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent4)"></span>Async/Await Patterns & Pitfalls</div>
+    <pre><span class="cm">// ❌ Sequential — 300ms total (avoidable!)</span>
+<span class="kw">const</span> a <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetchA</span>(); <span class="cm">// 100ms</span>
+<span class="kw">const</span> b <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetchB</span>(); <span class="cm">// 100ms</span>
+<span class="kw">const</span> c <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetchC</span>(); <span class="cm">// 100ms</span>
+
+<span class="cm">// ✅ Parallel — ~100ms total</span>
+<span class="kw">const</span> [a, b, c] <span class="op">=</span> <span class="kw">await</span> <span class="cls">Promise</span>.<span class="fn">all</span>([<span class="fn">fetchA</span>(), <span class="fn">fetchB</span>(), <span class="fn">fetchC</span>()]);
+
+<span class="cm">// ❌ Missing await on async forEach</span>
+items.<span class="fn">forEach</span>(<span class="kw">async</span> (item) <span class="op">=></span> {
+  <span class="kw">await</span> <span class="fn">save</span>(item); <span class="cm">// forEach doesn't await async callbacks!</span>
+});
+
+<span class="cm">// ✅ Use for...of for sequential async</span>
+<span class="kw">for</span> (<span class="kw">const</span> item <span class="kw">of</span> items) {
+  <span class="kw">await</span> <span class="fn">save</span>(item);
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent5)"></span>Async Generators — Streaming / Pagination</div>
+    <pre><span class="kw">async function*</span> <span class="fn">paginate</span>(url) {
+  <span class="kw">let</span> cursor <span class="op">=</span> <span class="kw">null</span>;
+  <span class="kw">do</span> {
+    <span class="kw">const</span> res <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(<span class="op">`</span><span class="str">${url}?cursor=${cursor}</span><span class="op">`</span>).<span class="fn">then</span>(r <span class="op">=></span> r.<span class="fn">json</span>());
+    <span class="kw">yield</span> res.data;
+    cursor <span class="op">=</span> res.nextCursor;
+  } <span class="kw">while</span> (cursor);
+}
+
+<span class="kw">for await</span> (<span class="kw">const</span> page <span class="kw">of</span> <span class="fn">paginate</span>(<span class="str">'/api/users'</span>)) {
+  <span class="kw">await</span> <span class="fn">processPage</span>(page); <span class="cm">// Memory-efficient: one page at a time</span>
+}</pre>
+    <div class="tip"><span class="tip-icon">💡</span><span>Async generators are excellent for streaming large datasets from DBs or external APIs without loading everything into memory. Perfect for ETL pipelines.</span></div>
+  </div>
+</div>
+
+<!-- SECTION 4: PROTOTYPES -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <span class="section-title">Prototypes & Class System</span>
+    <span class="section-sub"><span class="tag tag-b">OOP</span></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent4)"></span>Prototype Chain Lookup</div>
+    <div class="flow-diagram">
+      <div class="flow-box" style="color:var(--accent)">instance</div>
+      <span class="flow-arrow">→ [[Prototype]]</span>
+      <div class="flow-box" style="color:var(--accent4)">ClassName.prototype</div>
+      <span class="flow-arrow">→ [[Prototype]]</span>
+      <div class="flow-box" style="color:var(--accent5)">Object.prototype</div>
+      <span class="flow-arrow">→ [[Prototype]]</span>
+      <div class="flow-box" style="color:var(--text3)">null</div>
+    </div>
+    <pre><span class="kw">class</span> <span class="cls">Animal</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name <span class="op">=</span> name; }
+  <span class="fn">speak</span>() { <span class="kw">return</span> <span class="op">`</span><span class="str">${this.name} makes a sound</span><span class="op">`</span>; }
+}
+
+<span class="kw">class</span> <span class="cls">Dog</span> <span class="kw">extends</span> <span class="cls">Animal</span> {
+  <span class="fn">speak</span>() { <span class="kw">return</span> <span class="op">`</span><span class="str">${super.speak()} — woof!</span><span class="op">`</span>; }
+}
+
+<span class="kw">const</span> d <span class="op">=</span> <span class="kw">new</span> <span class="cls">Dog</span>(<span class="str">'Rex'</span>);
+<span class="cls">Object</span>.<span class="fn">getPrototypeOf</span>(d) <span class="op">===</span> <span class="cls">Dog</span>.prototype; <span class="cm">// true</span>
+d <span class="kw">instanceof</span> <span class="cls">Animal</span>; <span class="cm">// true — checks prototype chain</span></pre>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent2)"></span>Mixins Pattern</div>
+      <pre><span class="kw">const</span> Serializable <span class="op">=</span> (Base) <span class="op">=></span>
+  <span class="kw">class extends</span> Base {
+    <span class="fn">toJSON</span>() {
+      <span class="kw">return</span> <span class="cls">JSON</span>.<span class="fn">stringify</span>(<span class="kw">this</span>);
+    }
+  };
+
+<span class="kw">const</span> Timestamped <span class="op">=</span> (Base) <span class="op">=></span>
+  <span class="kw">class extends</span> Base {
+    <span class="fn">constructor</span>(...args) {
+      <span class="kw">super</span>(...args);
+      <span class="kw">this</span>.createdAt <span class="op">=</span> <span class="kw">new</span> <span class="cls">Date</span>();
+    }
+  };
+
+<span class="kw">class</span> <span class="cls">User</span> <span class="kw">extends</span>
+  <span class="fn">Serializable</span>(<span class="fn">Timestamped</span>(<span class="cls">Base</span>)) {}</pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent3)"></span>Private Fields (ES2022)</div>
+      <pre><span class="kw">class</span> <span class="cls">BankAccount</span> {
+  <span class="prop">#balance</span> <span class="op">=</span> <span class="num">0</span>; <span class="cm">// truly private</span>
+  <span class="kw">static</span> <span class="prop">#count</span> <span class="op">=</span> <span class="num">0</span>;
+
+  <span class="fn">deposit</span>(amount) {
+    <span class="kw">if</span> (amount <span class="op"><=</span> <span class="num">0</span>) <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">Error</span>(<span class="str">'Invalid'</span>);
+    <span class="kw">this</span>.<span class="prop">#balance</span> <span class="op">+=</span> amount;
+  }
+  <span class="kw">get</span> <span class="fn">balance</span>() { <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">#balance</span>; }
+}
+<span class="cm">// account.#balance → SyntaxError at parse time</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: MEMORY -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <span class="section-title">Memory Management & Performance</span>
+    <span class="section-sub"><span class="tag tag-o">Production</span></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent2)"></span>Common Memory Leaks in Node.js</div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Pattern</th><th>Problem</th><th>Fix</th></tr>
+        <tr><td>Global variables</td><td>Never GC'd</td><td>Use module scope, WeakMap, or explicit cleanup</td></tr>
+        <tr><td>Event listeners not removed</td><td>Closure keeps scope alive</td><td><code>emitter.removeListener</code> or use <code>once()</code></td></tr>
+        <tr><td>Timers not cleared</td><td>Callback + closure kept alive</td><td><code>clearInterval</code> in cleanup</td></tr>
+        <tr><td>Unbounded caches</td><td>Map grows forever</td><td>Use LRU or TTL eviction. Consider <code>WeakMap</code> for object keys</td></tr>
+        <tr><td>Circular references</td><td>Was a problem pre-2012 GC</td><td>Modern mark-and-sweep handles it, but avoid for clarity</td></tr>
+      </table>
+    </div>
+    <pre><span class="cm">// WeakMap — keys are GC'd when object unreachable</span>
+<span class="kw">const</span> cache <span class="op">=</span> <span class="kw">new</span> <span class="cls">WeakMap</span>();
+<span class="kw">function</span> <span class="fn">process</span>(obj) {
+  <span class="kw">if</span> (cache.<span class="fn">has</span>(obj)) <span class="kw">return</span> cache.<span class="fn">get</span>(obj);
+  <span class="kw">const</span> result <span class="op">=</span> <span class="fn">heavyComputation</span>(obj);
+  cache.<span class="fn">set</span>(obj, result); <span class="cm">// auto-cleaned when obj is GC'd</span>
+  <span class="kw">return</span> result;
+}</pre>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent5)"></span>V8 Optimization Tips</div>
+      <div class="pill-row">
+        <span class="pill">monomorphic functions</span>
+        <span class="pill">avoid hidden class changes</span>
+        <span class="pill">pre-allocate arrays</span>
+        <span class="pill">avoid delete on objects</span>
+      </div>
+      <pre><span class="cm">// ❌ Hidden class change — deopt</span>
+<span class="kw">const</span> obj <span class="op">=</span> {};
+obj.x <span class="op">=</span> <span class="num">1</span>; obj.y <span class="op">=</span> <span class="num">2</span>;
+<span class="kw">delete</span> obj.x; <span class="cm">// different hidden class</span>
+
+<span class="cm">// ✅ Define shape upfront</span>
+<span class="kw">const</span> obj <span class="op">=</span> { x: <span class="num">1</span>, y: <span class="num">2</span> };</pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent3)"></span>Streams over Buffers</div>
+      <pre><span class="cm">// ❌ Loads entire file into memory</span>
+<span class="kw">const</span> data <span class="op">=</span> fs.<span class="fn">readFileSync</span>(<span class="str">'huge.csv'</span>);
+
+<span class="cm">// ✅ Pipe streams — constant memory</span>
+fs.<span class="fn">createReadStream</span>(<span class="str">'huge.csv'</span>)
+  .<span class="fn">pipe</span>(<span class="fn">csvParser</span>())
+  .<span class="fn">pipe</span>(transformStream)
+  .<span class="fn">pipe</span>(res);
+
+<span class="cm">// ✅ pipeline() — proper error handling</span>
+<span class="kw">await</span> <span class="fn">pipeline</span>(readStream, transform, writeStream);</pre>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: MODERN ES -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <span class="section-title">Modern ES Features You Should Use</span>
+    <span class="section-sub"><span class="tag tag-b">ES2020–2024</span></span>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent4)"></span>Nullish, Optional Chaining & Logical Assignment</div>
+    <pre><span class="cm">// Nullish coalescing — only null/undefined (not 0, '', false)</span>
+<span class="kw">const</span> port <span class="op">=</span> config.port <span class="op">??</span> <span class="num">3000</span>; <span class="cm">// 0 is valid!</span>
+
+<span class="cm">// Optional chaining with methods & arrays</span>
+user?.address?.city;
+arr?.[<span class="num">0</span>]?.name;
+obj.method?.();
+
+<span class="cm">// Logical assignment (short-circuit assignment)</span>
+config.timeout <span class="op">??=</span> <span class="num">5000</span>;   <span class="cm">// assign if null/undefined</span>
+user.role <span class="op">||=</span> <span class="str">'guest'</span>;      <span class="cm">// assign if falsy</span>
+flags.debug <span class="op">&&=</span> isDevEnv; <span class="cm">// assign if truthy</span></pre>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent)"></span>Structuring & Patterns</div>
+      <pre><span class="cm">// Destructure with rename + default</span>
+<span class="kw">const</span> { name: <span class="prop">username</span> <span class="op">=</span> <span class="str">'anon'</span>, age } <span class="op">=</span> user;
+
+<span class="cm">// Object.fromEntries — transform maps</span>
+<span class="kw">const</span> doubled <span class="op">=</span> <span class="cls">Object</span>.<span class="fn">fromEntries</span>(
+  <span class="cls">Object</span>.<span class="fn">entries</span>(obj).<span class="fn">map</span>(([k, v]) <span class="op">=></span> [k, v <span class="op">*</span> <span class="num">2</span>])
+);
+
+<span class="cm">// Array methods (ES2023)</span>
+arr.<span class="fn">findLast</span>(x <span class="op">=></span> x > <span class="num">5</span>);
+arr.<span class="fn">toSorted</span>(); <span class="cm">// non-mutating sort</span>
+arr.<span class="fn">toSpliced</span>(<span class="num">1</span>, <span class="num">1</span>); <span class="cm">// non-mutating splice</span>
+arr.<span class="fn">with</span>(<span class="num">2</span>, <span class="str">'x'</span>); <span class="cm">// non-mutating index replace</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot-color" style="background:var(--accent3)"></span>Error Handling (ES2022)</div>
+      <pre><span class="cm">// Error cause — chain errors w/ context</span>
+<span class="kw">try</span> {
+  <span class="kw">await</span> <span class="fn">connectDB</span>();
+} <span class="kw">catch</span> (err) {
+  <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">Error</span>(<span class="str">'Startup failed'</span>, {
+    cause: err <span class="cm">// accessible via err.cause</span>
+  });
+}
+
+<span class="cm">// at() — negative indexing</span>
+arr.<span class="fn">at</span>(<span class="op">-</span><span class="num">1</span>); <span class="cm">// last element</span>
+str.<span class="fn">at</span>(<span class="op">-</span><span class="num">2</span>); <span class="cm">// second to last char</span>
+
+<span class="cm">// Object.hasOwn (safer than hasOwnProperty)</span>
+<span class="cls">Object</span>.<span class="fn">hasOwn</span>(obj, <span class="str">'key'</span>);</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent2)"></span>Proxy & Reflect — Metaprogramming</div>
+    <pre><span class="cm">// Validation proxy</span>
+<span class="kw">function</span> <span class="fn">createValidator</span>(target, schema) {
+  <span class="kw">return new</span> <span class="cls">Proxy</span>(target, {
+    <span class="fn">set</span>(obj, prop, value) {
+      <span class="kw">if</span> (schema[prop] && !schema[prop].<span class="fn">test</span>(value))
+        <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">TypeError</span>(<span class="op">`</span><span class="str">Invalid value for ${prop}</span><span class="op">`</span>);
+      <span class="kw">return</span> <span class="cls">Reflect</span>.<span class="fn">set</span>(obj, prop, value);
+    }
+  });
+}
+<span class="cm">// Also great for: logging, memoization, lazy loading, ORMs</span></pre>
+  </div>
+</div>
+
+<!-- SECTION 7: GOTCHAS -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <span class="section-title">Gotchas & Footguns</span>
+    <span class="section-sub"><span class="tag tag-o">Watch Out</span></span>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title" style="color:var(--accent2)">Type Coercion</div>
+      <pre style="font-size:.72rem"><span class="num">0</span> <span class="op">==</span> <span class="str">''</span>   <span class="cm">// true</span>
+<span class="num">0</span> <span class="op">==</span> <span class="str">'0'</span>  <span class="cm">// true</span>
+<span class="str">''</span> <span class="op">==</span> <span class="str">'0'</span> <span class="cm">// false!</span>
+<span class="kw">null</span> <span class="op">==</span> <span class="kw">undefined</span> <span class="cm">// true</span>
+<span class="kw">null</span> <span class="op">===</span> <span class="kw">undefined</span> <span class="cm">// false</span>
+<span class="num">NaN</span> <span class="op">===</span> <span class="num">NaN</span> <span class="cm">// false!</span>
+<span class="cm">// Always use ===</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent2)">Float Precision</div>
+      <pre style="font-size:.72rem"><span class="num">0.1</span> <span class="op">+</span> <span class="num">0.2</span> <span class="cm">// 0.30000000000000004</span>
+
+<span class="cm">// Fix: integer math</span>
+(<span class="num">0.1</span><span class="op">*</span><span class="num">10</span> <span class="op">+</span> <span class="num">0.2</span><span class="op">*</span><span class="num">10</span>) <span class="op">/</span> <span class="num">10</span> <span class="cm">// 0.3</span>
+
+<span class="cm">// Or: toFixed + parseFloat</span>
+<span class="fn">parseFloat</span>((<span class="num">0.1</span><span class="op">+</span><span class="num">0.2</span>).<span class="fn">toFixed</span>(<span class="num">10</span>))
+
+<span class="cm">// For money: use BigInt or decimal.js</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent2)">'this' Binding</div>
+      <pre style="font-size:.72rem"><span class="kw">class</span> <span class="cls">Timer</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">this</span>.count <span class="op">=</span> <span class="num">0</span>;
+    <span class="cm">// ❌ 'this' lost in callback</span>
+    <span class="fn">setInterval</span>(<span class="kw">function</span>() {
+      <span class="kw">this</span>.count<span class="op">++</span>; <span class="cm">// undefined.count</span>
+    }, <span class="num">1000</span>);
+    <span class="cm">// ✅ Arrow inherits 'this'</span>
+    <span class="fn">setInterval</span>(() <span class="op">=></span> <span class="kw">this</span>.count<span class="op">++</span>, <span class="num">1000</span>);
+  }
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent)"></span>JSON & Date Gotchas</div>
+    <pre><span class="cm">// JSON.stringify loses: undefined, functions, symbols, BigInt</span>
+<span class="cls">JSON</span>.<span class="fn">stringify</span>({ a: <span class="kw">undefined</span>, b: <span class="fn">() => {}</span>, c: <span class="num">42n</span> });
+<span class="cm">// → '{}' — silently drops a and b, throws on c</span>
+
+<span class="cm">// Date round-trip: JSON serializes to ISO string, not Date object</span>
+<span class="kw">const</span> orig <span class="op">=</span> { date: <span class="kw">new</span> <span class="cls">Date</span>() };
+<span class="kw">const</span> parsed <span class="op">=</span> <span class="cls">JSON</span>.<span class="fn">parse</span>(<span class="cls">JSON</span>.<span class="fn">stringify</span>(orig));
+parsed.date <span class="kw">instanceof</span> <span class="cls">Date</span>; <span class="cm">// false — it's a string!</span>
+
+<span class="cm">// Fix: use reviver</span>
+<span class="cls">JSON</span>.<span class="fn">parse</span>(str, (key, val) <span class="op">=></span>
+  <span class="kw">typeof</span> val <span class="op">===</span> <span class="str">'string'</span> <span class="op">&&</span> ISO_RE.<span class="fn">test</span>(val) ? <span class="kw">new</span> <span class="cls">Date</span>(val) : val
+);</pre>
+  </div>
+
+  <div class="warn"><span>⚠️</span><span><strong style="color:var(--accent2)">Array.sort() is not stable in all engines before Node 12</strong> — avoid sorting objects by multiple fields without a deterministic comparator. As of V8 7.0+ (Node 12+), sort is stable (TimSort). Always use an explicit comparator: <code>(a, b) => a.age - b.age || a.name.localeCompare(b.name)</code></span></div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot-color" style="background:var(--accent5)"></span>Symbol — Unique Keys & Well-Known Symbols</div>
+    <pre><span class="cm">// Custom iterator — implement Symbol.iterator</span>
+<span class="kw">class</span> <span class="cls">Range</span> {
+  <span class="fn">constructor</span>(start, end) { <span class="kw">this</span>.start <span class="op">=</span> start; <span class="kw">this</span>.end <span class="op">=</span> end; }
+  [<span class="cls">Symbol</span>.iterator]() {
+    <span class="kw">let</span> current <span class="op">=</span> <span class="kw">this</span>.start;
+    <span class="kw">const</span> end <span class="op">=</span> <span class="kw">this</span>.end;
+    <span class="kw">return</span> {
+      next() {
+        <span class="kw">return</span> current <span class="op"><=</span> end
+          ? { value: current<span class="op">++</span>, done: <span class="kw">false</span> }
+          : { done: <span class="kw">true</span> };
+      }
+    };
+  }
+}
+<span class="kw">for</span> (<span class="kw">const</span> n <span class="kw">of</span> <span class="kw">new</span> <span class="cls">Range</span>(<span class="num">1</span>, <span class="num">5</span>)) console.log(n); <span class="cm">// 1 2 3 4 5</span>
+[...<span class="kw">new</span> <span class="cls">Range</span>(<span class="num">1</span>, <span class="num">3</span>)]; <span class="cm">// [1, 2, 3]</span></pre>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="footer-note">
+  <span>📚 JavaScript Revision Note</span>
+  <span style="color:var(--border2)">|</span>
+  <span>4yr+ Backend Edition</span>
+  <span style="color:var(--border2)">|</span>
+  <span>ES2024 · Node.js · V8</span>
+  <span style="margin-left:auto;color:var(--text3)">Keep this open during deep work sessions</span>
+</div>
+
+</div>
+
+<script>
+document.querySelectorAll('.toc-btn').forEach(btn => {
+  btn.addEventListener('mouseleave', () => btn.blur());
+});
+</script>
+</body>
+</html>
